@@ -1,13 +1,18 @@
 const Equipo = require("../model/equipo"),
+    Tecnico = require('../model/tecnico')
 
 
-    equipoControler = {}
+
+
+equipoControler = {}
+
 
 
 equipoControler.create = async (req, res) => {
     const {
         nombre,
         id_tecnico,
+        color,
         id_futbolistas
 
 
@@ -18,6 +23,7 @@ equipoControler.create = async (req, res) => {
     const newEquipo = new Equipo({
         nombre: nombre,
         id_tecnico: id_tecnico,
+        color: color,
         id_futbolistas: id_futbolistas
 
 
@@ -32,16 +38,60 @@ equipoControler.create = async (req, res) => {
 }
 
 equipoControler.get = async (req, res) => {
-    const Equipo = await Equipo.find({})
+    const equipo = await Equipo.find({})
 
-    res.json(Equipo)
+    let equipoi = []
+
+
+
+
+    for (let i = 0; i < equipo.length; i++) {
+        console.log(equipo[i].id_tecnico)
+        const tecnico = await Tecnico.find({
+            _id: equipo[i].id_tecnico
+
+        })
+
+        const objetoEquipo = new Object()
+
+
+
+        objetoEquipo._id = equipo[i]._id
+        objetoEquipo.nombre = equipo[i].nombre
+        objetoEquipo.color = equipo[i].color
+        objetoEquipo.id_tecnico = equipo[i].id_tecnico
+        objetoEquipo.nombreTecnico = tecnico[0].nombre
+        objetoEquipo.id_futbolistas = equipo[i].id_futbolistas
+
+
+
+
+        console.log(objetoEquipo)
+        equipoi.push(objetoEquipo)
+
+
+
+
+    }
+    console.log(equipo)
+
+
+
+
+
+
+
+
+
+
+    res.json(equipoi)
 }
 
 equipoControler.findById = async (req, res) => {
-    const Equipo = await Equipo.find({
+    const equipo = await Equipo.find({
         _id: req.params._id
     })
-    res.json(Equipo)
+    res.json(equipo)
 }
 
 equipoControler.remove = async (req, res) => {
@@ -57,6 +107,7 @@ equipoControler.update = async (req, res) => {
     const {
         _id,
         nombre,
+        color,
         id_futbolistas,
         id_tecnico
 
@@ -66,6 +117,7 @@ equipoControler.update = async (req, res) => {
 
     let toUpdate = {
         nombre: nombre,
+        color: color,
         id_tecnico: id_tecnico,
         id_futbolistas: id_futbolistas
 
@@ -86,12 +138,12 @@ equipoControler.search = async (req, res) => {
     const {
         nombre
     } = req.body
-    const Equipo = await Equipo.find({
+    const equipo = await Equipo.find({
         nombre: {
             $regex: ".*" + nombre + ".*"
         }
     })
-    res.json(Equipo)
+    res.json(equipo)
 
 }
 

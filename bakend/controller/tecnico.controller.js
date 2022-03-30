@@ -58,6 +58,8 @@ tecnicoControler.findById = async (req, res) => {
     res.json(tecnico)
 }
 
+
+
 tecnicoControler.remove = async (req, res) => {
     await Tecnico.deleteOne({
         _id: req.params._id
